@@ -37,18 +37,28 @@ public class LanguageMod implements ModInitializer {
 				new BlockItem(ENTRY_BLOCK, new FabricItemSettings().group(ItemGroup.MISC)));
 
 		final int[] i = new int[] {0};
+		final int switchInterval = 500;
 		ServerTickEvents.END_WORLD_TICK.register((ServerWorld world) -> {
-			System.out.println(i[0]);
-			if (i[0] % 100 == 0) {
+			if (i[0] % switchInterval == 0) {
+				int clearDuration, rainDuration;
+				boolean isRaining;
+				System.out.println(i[0] / switchInterval);
+				if ((i[0] / switchInterval) % 2 == 0) {
+					clearDuration = 24000; rainDuration = 0;
+					isRaining = false;
+				} else {
+					clearDuration = 0; rainDuration = 24000;
+					isRaining = true;
+				}
 				System.out.println("starting RAIN");
-				world.setWeather(0, 24000, true, true);
+				System.out.println(isRaining);
+				world.setWeather(clearDuration, rainDuration, isRaining, isRaining);
 			}
 
 			i[0]++;
 		});
 		ClientTickEvents.END_WORLD_TICK.register((ClientWorld world) -> {
 
-			System.out.println("end world tick");
 		});
 	}
 }
